@@ -1,7 +1,10 @@
-FROM node:18-alpine
+FROM node:18
+
+ENV NODE_OPTIONS="--max_old_space_size=400"
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # FFmpeg kurulumu
-RUN apk update && apk add --no-cache ffmpeg
+RUN apt-get update && apt-get install -y ffmpeg
 
 WORKDIR /app
 
