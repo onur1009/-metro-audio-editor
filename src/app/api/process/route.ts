@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
     // Setup directories
     const tmpDir = join(process.cwd(), "tmp");
-    const outputDir = join(process.cwd(), "public", "outputs");
+    const outputDir = join(process.cwd(), "tmp", "outputs");
     if (!existsSync(tmpDir)) await mkdir(tmpDir, { recursive: true });
     if (!existsSync(outputDir)) await mkdir(outputDir, { recursive: true });
 
@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
         }
 
         command
-          .on("end", () => resolve(`/outputs/${audioId}_output_${bitrate || 'wav'}.${ext}`))
+          .on("end", () => resolve(`/api/download?file=${audioId}_output_${bitrate || 'wav'}.${ext}`))
           .on("error", (err) => {
             console.error("FFmpeg error:", err);
             reject(err);
