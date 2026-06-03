@@ -417,7 +417,7 @@ export default function AudioEditor({ audioFile, onAudioUpdate }: AudioEditorPro
               return (
                 <a 
                   key={index} 
-                  href={`${link.url}&name=${encodeURIComponent(downloadFilename)}`}
+                  href={link.url}
                   download={downloadFilename}
                   className="btn-primary"
                   style={{ flex: 1, minWidth: '150px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}

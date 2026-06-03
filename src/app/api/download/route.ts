@@ -4,6 +4,8 @@ import { join } from "path";
 import { existsSync } from "fs";
 import { tmpdir } from "os";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const filename = searchParams.get("file");

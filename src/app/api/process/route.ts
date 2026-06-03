@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
+import { writeFile, readFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { tmpdir } from "os";
 import ffmpeg from "fluent-ffmpeg";
@@ -98,7 +98,16 @@ export async function POST(req: NextRequest) {
         }
 
         command
-          .on("end", () => resolve(`/api/download?file=${audioId}_output_${bitrate || 'wav'}.${ext}`))
+          .on("end", async () => {
+            try {
+              const fileBuffer = await readFile(outputPath);
+              const base64Data = fileBuffer.toString("base64");
+              const mimeType = isWav ? "audio/wav" : "audio/mpeg";
+              resolve(`data:${mimeType};base64,${base64Data}`);
+            } catch (err) {
+              reject(err);
+            }
+          })
           .on("error", (err) => {
             console.error("FFmpeg error:", err);
             reject(err);
