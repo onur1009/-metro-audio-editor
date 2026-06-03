@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
+import { tmpdir } from "os";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -17,7 +18,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Invalid filename" }, { status: 400 });
   }
 
-  const filePath = join(process.cwd(), "tmp", "outputs", filename);
+  const filePath = join(tmpdir(), "metro-audio", "outputs", filename);
 
   if (!existsSync(filePath)) {
     return NextResponse.json({ error: "File not found" }, { status: 404 });

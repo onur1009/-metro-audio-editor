@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
+import { tmpdir } from "os";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import crypto from "crypto";
@@ -26,8 +27,8 @@ export async function POST(req: NextRequest) {
     const edits = JSON.parse(editsStr || "[]");
 
     // Setup directories
-    const tmpDir = join(process.cwd(), "tmp");
-    const outputDir = join(process.cwd(), "tmp", "outputs");
+    const tmpDir = join(tmpdir(), "metro-audio");
+    const outputDir = join(tmpdir(), "metro-audio", "outputs");
     if (!existsSync(tmpDir)) await mkdir(tmpDir, { recursive: true });
     if (!existsSync(outputDir)) await mkdir(outputDir, { recursive: true });
 

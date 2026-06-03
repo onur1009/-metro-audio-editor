@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile, readFile, mkdir } from "fs/promises";
 import { join } from "path";
+import { tmpdir } from "os";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import crypto from "crypto";
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No audio file provided" }, { status: 400 });
     }
 
-    const tmpDir = join(process.cwd(), "tmp");
+    const tmpDir = join(tmpdir(), "metro-audio");
     if (!existsSync(tmpDir)) {
       await mkdir(tmpDir, { recursive: true });
     }
