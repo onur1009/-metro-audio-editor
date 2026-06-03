@@ -284,7 +284,10 @@ export default function AudioEditor({ audioFile, onAudioUpdate }: AudioEditorPro
         body: formData,
       });
 
-      if (!response.ok) throw new Error("Processing failed");
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || "İşlem sırasında sunucudan bir hata döndü.");
+      }
 
       const data = await response.json();
       if (data.files) {
@@ -414,7 +417,7 @@ export default function AudioEditor({ audioFile, onAudioUpdate }: AudioEditorPro
               return (
                 <a 
                   key={index} 
-                  href={link.url} 
+                  href={`${link.url}&name=${encodeURIComponent(downloadFilename)}`}
                   download={downloadFilename}
                   className="btn-primary"
                   style={{ flex: 1, minWidth: '150px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}

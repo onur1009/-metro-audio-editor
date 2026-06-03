@@ -6,6 +6,7 @@ import { existsSync } from "fs";
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const filename = searchParams.get("file");
+  const customName = searchParams.get("name");
 
   if (!filename) {
     return NextResponse.json({ error: "No file specified" }, { status: 400 });
@@ -30,10 +31,12 @@ export async function GET(req: NextRequest) {
     if (filename.endsWith(".mp3")) contentType = "audio/mpeg";
     if (filename.endsWith(".wav")) contentType = "audio/wav";
 
+    const downloadName = customName || filename;
+
     return new NextResponse(fileBuffer, {
       headers: {
         "Content-Type": contentType,
-        "Content-Disposition": `attachment; filename="${filename}"`
+        "Content-Disposition": `attachment; filename="${downloadName}"`
       }
     });
   } catch (error) {

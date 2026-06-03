@@ -122,8 +122,8 @@ export async function POST(req: NextRequest) {
       ]
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Processing error:", error);
-    return NextResponse.json({ error: "Failed to process audio" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Failed to process audio" }, { status: 500 });
   }
 }
