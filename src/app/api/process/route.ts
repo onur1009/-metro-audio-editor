@@ -79,15 +79,26 @@ export async function POST(req: NextRequest) {
         
         if (jinglePath) {
           command = command.input(jinglePath).input(audioPath);
+          let finalOut = "[concat_out]";
           const filterComplex = [
             `[1:a]${processAudioChain || 'anull'}[processed]`,
-            `[0:a][processed]concat=n=2:v=0:a=1[out]`
+            `[0:a][processed]concat=n=2:v=0:a=1[concat_out]`
           ];
-          command = command.complexFilter(filterComplex).map("[out]");
+          
+          if (bitrate === '192k') {
+            filterComplex.push(`[concat_out]volume=-7dB[final]`);
+            finalOut = "[final]";
+          }
+          
+          command = command.complexFilter(filterComplex).map(finalOut);
         } else {
           command = command.input(audioPath);
-          if (processAudioChain) {
-            command = command.audioFilters(processAudioChain.split(","));
+          let filters = processAudioChain ? processAudioChain.split(",") : [];
+          if (bitrate === '192k') {
+            filters.push("volume=-7dB");
+          }
+          if (filters.length > 0) {
+            command = command.audioFilters(filters);
           }
         }
 
